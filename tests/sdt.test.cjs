@@ -1,0 +1,20 @@
+'use strict';
+const assert=require('node:assert/strict');
+const SDT=require('../dist/sdt.js');
+const near=(a,b,tol=1e-6)=>assert.ok(Math.abs(a-b)<tol,`${a} != ${b}`);
+near(SDT.normalInv(.5),0);near(SDT.normalInv(.975),1.95996398454);
+for(const p of [.001,.01,.05,.2,.5,.8,.95,.99,.999])near(SDT.normalCDF(SDT.normalInv(p)),p,1e-6);
+const rows=(signal,answer,n)=>Array.from({length:n},()=>({signal,answer}));
+const balanced=SDT.summarize([...rows(true,true,8),...rows(true,false,2),...rows(false,true,2),...rows(false,false,8)]);
+assert.deepEqual([balanced.H,balanced.M,balanced.FA,balanced.CR],[8,2,2,8]);near(balanced.hit,.8);near(balanced.fa,.2);near(balanced.accuracy,.8);near(balanced.c,0);assert.ok(balanced.dPrime>1.4&&balanced.dPrime<1.6);
+const perfect=SDT.summarize([...rows(true,true,10),...rows(false,false,10)]);
+near(perfect.accuracy,1);assert.ok(Number.isFinite(perfect.dPrime));assert.ok(perfect.dPrime>3);
+const allYes=SDT.summarize([...rows(true,true,10),...rows(false,true,10)]);near(allYes.dPrime,0);assert.ok(allYes.c<0);
+const allNo=SDT.summarize([...rows(true,false,10),...rows(false,false,10)]);near(allNo.dPrime,0);assert.ok(allNo.c>0);
+const inverted=SDT.summarize([...rows(true,false,10),...rows(false,true,10)]);assert.ok(inverted.dPrime<0);assert.equal(inverted.accuracy,0);
+for(const count of [20,40,60])for(const p of [.3,.5,.7])for(const d of [1,1.8,2.6]){const trials=SDT.makeTrials(count,p,d,123);assert.equal(trials.length,count);assert.equal(trials.filter(t=>t.signal).length,count*p);assert.ok(trials.every(t=>Number.isFinite(t.evidence)));assert.deepEqual(trials,SDT.makeTrials(count,p,d,123));}
+assert.throws(()=>SDT.makeTrials(20,0,1,1));assert.throws(()=>SDT.summarize(rows(true,true,20)));assert.throws(()=>SDT.summarize([{signal:true}]));assert.throws(()=>SDT.normalInv(1));
+const r=SDT.seedRandom(8123),samples=Array.from({length:100000},()=>SDT.gaussian(r));
+const mean=samples.reduce((a,b)=>a+b)/samples.length,variance=samples.reduce((a,b)=>a+(b-mean)**2,0)/samples.length;
+near(mean,0,.015);near(variance,1,.02);
+console.log('PASS: normal functions, four outcomes, extreme correction, bias signs, deterministic generation, 27 configurations, Gaussian sampling.');

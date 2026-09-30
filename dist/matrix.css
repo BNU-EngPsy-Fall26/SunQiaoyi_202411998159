@@ -1,0 +1,31 @@
+/* Exploration matrix: columns are truth; rows are the observer's response. */
+.concept-matrix-panel{margin-top:30px}
+.matrix-controls{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:20px;max-width:800px}
+.matrix-controls label{display:block;font-size:14px;font-weight:600;margin-bottom:8px}
+.matrix-context{font-size:13px;color:var(--muted);margin:18px 0}
+.sdt-matrix{border-collapse:separate;border-spacing:3px;table-layout:fixed;width:100%;background:var(--line);border-radius:10px;overflow:hidden;text-align:center}
+.sdt-matrix th,.sdt-matrix td{border:0;white-space:normal;text-align:center;vertical-align:middle;padding:18px 12px;line-height:1.5}
+.sdt-matrix th{background:var(--ink);color:#fff;font-size:17px;font-weight:600}
+.sdt-matrix th span{display:block;font-size:13px;color:#d0e2d7;font-weight:400;margin-top:4px}
+.sdt-matrix .matrix-blank{width:30%}
+.sdt-matrix td{width:35%;color:var(--ink)}
+.sdt-matrix td>span{display:block;font-size:15px}
+.sdt-matrix td strong{display:block;font-size:36px;font-variant-numeric:tabular-nums;line-height:1.4;font-weight:650;margin:4px 0}
+.sdt-matrix td small{display:block;font-size:13px;color:#486055}
+.sdt-matrix .matrix-hit{background:#d9f2e3}
+.sdt-matrix .matrix-fa{background:#fcf0c9}
+.sdt-matrix .matrix-miss{background:#f7e1dc}
+.sdt-matrix .matrix-cr{background:#e1edf8}
+.matrix-explanation{font-size:14px;color:var(--muted);line-height:1.85;margin:18px 0 0;max-width:1000px}
+@media(max-width:720px){
+  .matrix-controls{grid-template-columns:minmax(0,1fr);gap:14px}
+  .sdt-matrix{border-spacing:2px}
+  .sdt-matrix th,.sdt-matrix td{padding:12px 4px}
+  .sdt-matrix th{font-size:14px}
+  .sdt-matrix th span{font-size:11px}
+  .sdt-matrix td>span{font-size:12px}
+  .sdt-matrix td strong{font-size:26px}
+  .sdt-matrix td small{font-size:11px}
+  .sdt-matrix .matrix-blank{width:32%}
+  .sdt-matrix td{width:34%}
+}
