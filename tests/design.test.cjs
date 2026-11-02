@@ -183,6 +183,15 @@ test('三个实验情境图均存在并接入对应模块', () => {
   }
 });
 
+test('样式表引用的颜色变量均已定义', () => {
+  const styles = fs.readFileSync(path.join(projectRoot, 'styles.css'), 'utf8');
+  const defined = new Set([...styles.matchAll(/--([a-z0-9-]+)\s*:/gi)].map((match) => match[1]));
+  const referenced = [...styles.matchAll(/var\(--([a-z0-9-]+)/gi)].map((match) => match[1]);
+  for (const name of referenced) {
+    assert.ok(defined.has(name), `CSS 变量未定义：--${name}`);
+  }
+});
+
 test('README 固定 H1–H9 且标记尚未正式收数', () => {
   const readme = fs.readFileSync(path.join(projectRoot, 'README.md'), 'utf8');
   for (let i = 1; i <= 9; i += 1) assert.match(readme, new RegExp(`H${i}`));
