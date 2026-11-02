@@ -82,7 +82,10 @@ class CdpClient {
       window.addEventListener('error', event => window.__qaErrors.push(String(event.error || event.message)));
       window.addEventListener('unhandledrejection', event => window.__qaErrors.push(String(event.reason)));
       const nativeSetTimeout = window.setTimeout.bind(window);
-      window.setTimeout = (fn, ms, ...args) => nativeSetTimeout(fn, ms >= 10000 ? ms : Math.min(ms, 25), ...args);
+      window.setTimeout = (fn, ms, ...args) => {
+        const adjusted = ms >= 10000 ? ms : ([1500, 5000].includes(ms) ? 500 : Math.min(ms, 25));
+        return nativeSetTimeout(fn, adjusted, ...args);
+      };
 
       const participant = document.getElementById('participant');
       const consent = document.getElementById('consent');
