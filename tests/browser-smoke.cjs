@@ -3,6 +3,7 @@
 const assert = require('node:assert/strict');
 
 const port = Number(process.argv[2] || 9223);
+const storageKey = process.argv[3] || 'attention_lab_hw2_test_session_v1';
 const endpoint = `http://127.0.0.1:${port}`;
 
 async function waitForTarget() {
@@ -81,7 +82,7 @@ class CdpClient {
       window.addEventListener('error', event => window.__qaErrors.push(String(event.error || event.message)));
       window.addEventListener('unhandledrejection', event => window.__qaErrors.push(String(event.reason)));
       const nativeSetTimeout = window.setTimeout.bind(window);
-      window.setTimeout = (fn, ms, ...args) => nativeSetTimeout(fn, Math.min(ms, 25), ...args);
+      window.setTimeout = (fn, ms, ...args) => nativeSetTimeout(fn, ms >= 10000 ? ms : Math.min(ms, 25), ...args);
 
       const participant = document.getElementById('participant');
       const consent = document.getElementById('consent');
@@ -151,13 +152,17 @@ class CdpClient {
   }
   assert.equal(done, true, '浏览器端到端流程未在 120 秒内完成');
 
-  const stateText = await client.evaluate("localStorage.getItem('attention_lab_hw2_last_session_v1')");
+  const stateText = await client.evaluate(`localStorage.getItem(${JSON.stringify(storageKey)})`);
   const state = JSON.parse(stateText);
   assert.equal(state.participant, 'qa_smoke_01');
   assert.equal(state.results.flanker_grouping.trials.length, 48);
   assert.equal(state.results.visual_search_grouping.trials.length, 60);
   assert.equal(state.results.graphical_perception_guides.trials.length, 36);
   assert.ok(state.completed_at);
+  if (state.test_mode) {
+    assert.ok(Object.values(state.uploads).every((upload) => upload.status === 'success'));
+    assert.ok(Object.values(state.uploads).every((upload) => (upload.warnings || []).length === 0));
+  }
   assert.deepEqual(await client.evaluate('window.__qaErrors'), []);
 
   const runtimeErrors = client.events.filter((event) =>

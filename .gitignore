@@ -10,4 +10,5 @@ downloads/
 *.log
 .edge-test-profile/
 .edge-smoke-profile/
+.edge-upload-profile/
 browser-home.png

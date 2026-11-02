@@ -172,3 +172,11 @@ test('README 固定 H1–H9 且标记尚未正式收数', () => {
   assert.match(readme, /正式收数状态：\*\*尚未开始\*\*/);
   assert.match(readme, /4c925936d4f1259e5a7ecc58c97e3d6107adaa28/);
 });
+
+test('公开项目码已配置且代码中没有下载密钥字段', () => {
+  const app = fs.readFileSync(path.join(projectRoot, 'app.js'), 'utf8');
+  assert.match(app, /project:\s*'CUPX8L'/);
+  assert.doesNotMatch(app, /REPLACE_ME|owner_key|download_key/i);
+  assert.match(app, /testMode.*searchParams|testMode.*URLSearchParams|testMode/s);
+  assert.match(app, /test_\$\{result\.experiment\}/);
+});

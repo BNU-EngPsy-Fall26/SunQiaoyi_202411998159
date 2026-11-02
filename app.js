@@ -5,11 +5,13 @@
   const logic = root.logic;
   const app = document.getElementById('app');
   const headerStatus = document.getElementById('header-status');
+  const testMode = new URLSearchParams(location.search).get('test') === '1';
 
   const CONFIG = {
     lab: 'https://attention-lab-production.up.railway.app',
-    project: 'REPLACE_ME',
-    storageKey: 'attention_lab_hw2_last_session_v1'
+    project: 'CUPX8L',
+    testMode,
+    storageKey: testMode ? 'attention_lab_hw2_test_session_v1' : 'attention_lab_hw2_last_session_v1'
   };
 
   const EXPERIMENT_NAME_TO_ID = {
@@ -124,12 +126,16 @@
       started_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       completed_at: null,
+      test_mode: CONFIG.testMode,
       results: {},
       uploads: {}
     };
   }
 
   function projectNotice() {
+    if (CONFIG.testMode) {
+      return '<div class="alert alert-warning"><strong>当前为测试模式</strong><br>上传的实验名会自动添加 <code>test_</code> 前缀，不得计入正式样本。</div>';
+    }
     if (projectConfigured()) {
       return `<div class="alert alert-success">课程项目码已配置：<strong>${logic.escapeHtml(CONFIG.project)}</strong>。实验完成后会自动上传。</div>`;
     }
@@ -240,7 +246,7 @@
         signal: controller.signal,
         body: JSON.stringify({
           project: CONFIG.project,
-          experiment: result.experiment,
+          experiment: CONFIG.testMode ? `test_${result.experiment}` : result.experiment,
           participant: activeState.participant,
           condition: activeState.order.join('-'),
           trials: result.trials,
