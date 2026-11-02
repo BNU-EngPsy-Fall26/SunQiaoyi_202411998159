@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>视觉搜索模型与实测结果</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./logic.js"></script>
+  <script defer src="./model.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./index.html" aria-label="返回实验首页">
+      <span class="brand-mark" aria-hidden="true">VO</span>
+      <span><strong>视觉组织实验室</strong><small>Visual Organization Lab</small></span>
+    </a>
+    <div class="header-status">模型分析</div>
+  </header>
+
+  <main id="model-app">
+    <section class="panel">
+      <p class="eyebrow">额外模型可视化</p>
+      <h1>视觉搜索范围模型</h1>
+      <p class="lead">模型预测颜色分区会把有效搜索范围缩小约一半。选择课程后台下载的 CSV 后，页面会在本地计算正式被试结果，并与事前预测直接比较。</p>
+
+      <div class="model-formula-grid">
+        <div><span>特征搜索</span><code>ΔRT = 0</code><small>预测近似平行搜索</small></div>
+        <div><span>混合联合</span><code>ΔRT = τ(N−8)/2</code><small>平均检查约一半项目</small></div>
+        <div><span>颜色分区</span><code>ΔRT = τ(N−8)/4</code><small>有效搜索范围约减半</small></div>
+      </div>
+
+      <div class="model-analysis-grid">
+        <div>
+          <div class="model-chart-heading">
+            <div><h2>事前预测与实测</h2><p class="small muted">混合条件用于标定，虚线为固定预测。</p></div>
+            <label class="btn btn-secondary model-file-label" for="model-csv">选择 CSV</label>
+            <input class="model-file-input" id="model-csv" type="file" accept=".csv,text/csv">
+          </div>
+          <div id="model-status" class="alert alert-info">当前显示事前预测。正式 CSV 仅在本机浏览器中读取，不会上传。</div>
+          <div id="model-metrics" class="model-metrics" aria-live="polite"></div>
+          <div id="model-chart" class="model-chart-wrap"></div>
+          <div id="model-legend"></div>
+        </div>
+
+        <aside class="model-method">
+          <h2>分析规则</h2>
+          <ol>
+            <li>只读取正式实验名 <code>visual_search_grouping</code>。</li>
+            <li>同一编号重复完成时保留最后一条完整记录。</li>
+            <li>排除错误、超时和小于 150 ms 的反应。</li>
+            <li>先计算每名被试各条件的中位反应时。</li>
+            <li>用混合条件的搜索成本标准化全部结果。</li>
+          </ol>
+          <div class="model-note"><strong>判定标准</strong><p>条件顺序应为“特征 &lt; 分组联合 &lt; 混合联合”，分组/混合斜率比的事前预测值为 0.50。</p></div>
+        </aside>
+      </div>
+
+      <div class="model-table-wrap">
+        <table class="model-table">
+          <thead><tr><th>搜索条件</th><th>模型预测</th><th>实测标准化成本</th><th>实测 ΔRT（ms）</th></tr></thead>
+          <tbody id="model-table-body">
+            <tr><th scope="row">特征搜索</th><td>0.00</td><td>—</td><td>—</td></tr>
+            <tr><th scope="row">颜色分区</th><td>0.50</td><td>—</td><td>—</td></tr>
+            <tr><th scope="row">混合联合</th><td>1.00</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="actions"><a class="btn btn-primary" href="./index.html">返回实验首页</a></div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><span>工程心理学 · 注意实验室作业二</span><span>CSV 分析仅在本地完成</span></footer>
+</body>
+</html>

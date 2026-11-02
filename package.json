@@ -5,6 +5,6 @@
   "description": "工程心理学作业二：视觉组织与注意效率实验室",
   "scripts": {
     "test": "node --test tests/*.test.cjs",
-    "check": "node --check logic.js && node --check app.js && node --check experiments/flanker.js && node --check experiments/visual-search.js && node --check experiments/graphical-perception.js"
+    "check": "node --check logic.js && node --check model.js && node --check app.js && node --check experiments/flanker.js && node --check experiments/visual-search.js && node --check experiments/graphical-perception.js"
   }
 }

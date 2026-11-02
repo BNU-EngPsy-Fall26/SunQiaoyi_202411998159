@@ -13,6 +13,7 @@ context.globalThis = context;
 
 for (const relativePath of [
   'logic.js',
+  'model.js',
   'experiments/flanker.js',
   'experiments/visual-search.js',
   'experiments/graphical-perception.js'
@@ -21,7 +22,7 @@ for (const relativePath of [
   vm.runInContext(source, context, { filename: relativePath });
 }
 
-const { logic, experiments } = context.HW2;
+const { logic, model, experiments } = context.HW2;
 
 function countBy(items, keyFn) {
   const result = new Map();
@@ -153,6 +154,44 @@ test('三个核心改进效应的计算方向正确', () => {
   assert.equal(graphical.guide_benefit, 5);
 });
 
+test('搜索范围模型固定预测并正确汇总实测斜率', () => {
+  const trials = [];
+  const searchValues = {
+    feature: [500, 516],
+    conjunction_mixed: [520, 840],
+    conjunction_grouped: [510, 670]
+  };
+  for (const [type, values] of Object.entries(searchValues)) {
+    for (const [index, setSize] of [8, 24].entries()) {
+      for (let i = 0; i < 10; i += 1) trials.push({ search_type: type, set_size: setSize, rt: values[index], correct: 1 });
+    }
+  }
+  const comparison = model.comparisonFromTrials(trials);
+  assert.equal(comparison.ready, true);
+  assert.equal(comparison.predicted.feature, 0);
+  assert.equal(comparison.predicted.conjunction_grouped, 0.5);
+  assert.equal(comparison.predicted.conjunction_mixed, 1);
+  assert.equal(comparison.slopeRatio, 0.5);
+  assert.equal(comparison.actual.feature, 0.05);
+  assert.equal(comparison.actual.conjunction_grouped, 0.5);
+  assert.equal(comparison.actual.conjunction_mixed, 1);
+  assert.equal(comparison.orderMatch, true);
+});
+
+test('模型 CSV 分析排除 test_ 记录并处理引号字段', () => {
+  const csv = [
+    'record_id,created_at,experiment,participant,trial_index,search_type,set_size,rt,correct,timeout,meta',
+    '1,2026-11-02 10:00:00,test_visual_search_grouping,P01,1,feature,8,500,True,False,"{""note"":""a,b""}"',
+    '2,2026-11-02 10:01:00,visual_search_grouping,P02,1,feature,8,510,True,False,"{""note"":""ok""}"'
+  ].join('\n');
+  const rows = model.parseCsv(csv);
+  assert.equal(rows.length, 2);
+  assert.equal(rows[0].meta, '{"note":"a,b"}');
+  const summaries = model.participantSummaries(rows);
+  assert.equal(summaries.length, 1);
+  assert.equal(summaries[0].participant, 'P02');
+});
+
 test('入口页面只使用相对本地资源路径', () => {
   const html = fs.readFileSync(path.join(projectRoot, 'index.html'), 'utf8');
   const localRefs = [...html.matchAll(/(?:src|href)="([^"]+)"/g)]
@@ -164,6 +203,18 @@ test('入口页面只使用相对本地资源路径', () => {
     assert.ok(fs.existsSync(path.join(projectRoot, ref)), `文件不存在：${ref}`);
   }
   assert.doesNotMatch(html, /type="module"/);
+});
+
+test('模型页面可离线打开且实验首页提供入口', () => {
+  const index = fs.readFileSync(path.join(projectRoot, 'index.html'), 'utf8');
+  const html = fs.readFileSync(path.join(projectRoot, 'model.html'), 'utf8');
+  assert.match(index, /\.\/model\.html/);
+  assert.match(index, /\.\/model\.js/);
+  for (const ref of [...html.matchAll(/(?:src|href)="([^"]+)"/g)].map((match) => match[1])) {
+    assert.ok(ref.startsWith('./'), `模型页应使用相对路径：${ref}`);
+    assert.ok(fs.existsSync(path.join(projectRoot, ref)), `模型页文件不存在：${ref}`);
+  }
+  assert.match(html, /事前预测与实测/);
 });
 
 test('三个实验情境图均存在并接入对应模块', () => {
@@ -197,6 +248,8 @@ test('README 固定 H1–H9 且标记尚未正式收数', () => {
   for (let i = 1; i <= 9; i += 1) assert.match(readme, new RegExp(`H${i}`));
   assert.match(readme, /正式收数状态：\*\*尚未开始\*\*/);
   assert.match(readme, /4c925936d4f1259e5a7ecc58c97e3d6107adaa28/);
+  assert.match(readme, /fb36016cd6dc4667169dd3dcb8d78288e623e694/);
+  assert.match(readme, /model\.html/);
 });
 
 test('公开项目码已配置且代码中没有下载密钥字段', () => {

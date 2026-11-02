@@ -403,6 +403,11 @@
       </article>`;
   }
 
+  function searchModelResultSection(result) {
+    if (!result || !root.model) return '';
+    return root.model.resultPanelHtml(root.model.comparisonFromTrials(result.trials));
+  }
+
   function uploadStatusHtml() {
     return Object.entries(activeState.results).map(([name, result]) => {
       const upload = activeState.uploads[name] || { status: 'local', message: '尚未上传' };
@@ -426,6 +431,7 @@
           ${searchResultCard(search)}
           ${graphicalResultCard(graphical)}
         </div>
+        ${searchModelResultSection(search)}
         <h3>数据状态</h3>
         <div class="status-list">${uploadStatusHtml()}</div>
         ${projectConfigured() ? '' : '<div class="alert alert-warning">课程项目码尚未配置。请下载本地备份，配置项目码后可以重新上传。</div>'}
