@@ -69,7 +69,7 @@
         </div>
         <div class="experiment-stage">${content}</div>
         <div style="position:absolute;left:0;right:0;bottom:0;height:5px;background:rgba(255,255,255,.08)">
-          <div style="height:100%;width:${percentage}%;background:#31b7af"></div>
+          <div style="height:100%;width:${percentage}%;background:linear-gradient(90deg,#C5E9E3,#5F89B1)"></div>
         </div>
       </section>`);
   }
@@ -163,9 +163,18 @@
             <h1>视觉组织与<br>注意效率实验室</h1>
             <p class="lead">你将完成三个短实验，观察目标边界、颜色分区和图形参照线怎样影响反应速度与判断准确性。</p>
             <div class="study-list">
-              <article class="study-card"><span class="num">01</span><h3>目标隔离</h3><p>忽略侧翼箭头，判断中央目标。</p></article>
-              <article class="study-card"><span class="num">02</span><h3>颜色分区</h3><p>在不同组织方式中寻找目标。</p></article>
-              <article class="study-card"><span class="num">03</span><h3>参照信息</h3><p>从条形和角度图形估计比例。</p></article>
+              <article class="study-card">
+                <div class="study-visual"><img src="./assets/images/flanker-monitoring.png" alt="监控台上被单独框选的中央警报目标"></div>
+                <div class="study-content"><span class="num">01</span><h3>目标隔离</h3><p>在监控告警中忽略周围方向干扰，判断中央目标。</p></div>
+              </article>
+              <article class="study-card">
+                <div class="study-visual"><img src="./assets/images/visual-search-dashboard.png" alt="按颜色分区的监控界面中正在寻找红色目标"></div>
+                <div class="study-content"><span class="num">02</span><h3>颜色分区</h3><p>在密集界面中寻找目标，比较不同信息组织方式。</p></div>
+              </article>
+              <article class="study-card">
+                <div class="study-visual"><img src="./assets/images/graphical-perception.png" alt="使用条形图和角度仪表比较两个数值"></div>
+                <div class="study-content"><span class="num">03</span><h3>参照信息</h3><p>比较条形和角度图形，估计两个指标的比例。</p></div>
+              </article>
             </div>
           </div>
           <aside>

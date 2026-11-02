@@ -198,6 +198,10 @@
       title: '估计两个图形的比例',
       html: `
         <p class="lead">每次会出现图形 A 和图形 B。请估计较小值是较大值的百分之多少，并输入 0–100 的整数。</p>
+        <div class="context-scene blush">
+          <div><p class="context-kicker">应用情境</p><h3>仪表与数据图表的快速判断</h3><p>分析人员经常需要比较两个指标的相对大小。共同尺度、刻度和参考线会影响比例判断的准确程度。</p></div>
+          <img src="./assets/images/graphical-perception.png" alt="分析人员使用条形图和角度仪表比较数值">
+        </div>
         <div class="instruction-grid">
           <div class="instruction-card"><h3>例：一半</h3><p>如果较小图形约为较大图形的一半，输入 50。</p></div>
           <div class="instruction-card"><h3>保持直觉判断</h3><p>不需要精确计算。请根据图形尽快作答。</p></div>

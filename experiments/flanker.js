@@ -104,6 +104,10 @@
       title: '判断中央箭头的方向',
       html: `
         <p class="lead">屏幕中央会出现五个箭头。只判断最中间箭头的方向，忽略两侧箭头。</p>
+        <div class="context-scene">
+          <div><p class="context-kicker">应用情境</p><h3>监控台上的关键警报</h3><p>操作员需要快速判断当前告警的方向，周围状态指示会同时进入视野。清晰的对象边界可能帮助注意集中到当前目标。</p></div>
+          <img src="./assets/images/flanker-monitoring.png" alt="监控台上被单独框选的中央警报目标">
+        </div>
         <div class="instruction-grid">
           <div class="instruction-card"><h3><kbd>F</kbd> 向左</h3><p>中央箭头朝左时按 F。</p></div>
           <div class="instruction-card"><h3><kbd>J</kbd> 向右</h3><p>中央箭头朝右时按 J。</p></div>

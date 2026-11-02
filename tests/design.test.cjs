@@ -166,6 +166,23 @@ test('入口页面只使用相对本地资源路径', () => {
   assert.doesNotMatch(html, /type="module"/);
 });
 
+test('三个实验情境图均存在并接入对应模块', () => {
+  const expected = [
+    ['assets/images/flanker-monitoring.png', 'experiments/flanker.js'],
+    ['assets/images/visual-search-dashboard.png', 'experiments/visual-search.js'],
+    ['assets/images/graphical-perception.png', 'experiments/graphical-perception.js']
+  ];
+  const app = fs.readFileSync(path.join(projectRoot, 'app.js'), 'utf8');
+  for (const [asset, modulePath] of expected) {
+    const fullAsset = path.join(projectRoot, asset);
+    assert.ok(fs.existsSync(fullAsset), `情境图不存在：${asset}`);
+    assert.ok(fs.statSync(fullAsset).size > 100000, `情境图文件异常：${asset}`);
+    assert.match(app, new RegExp(asset.replaceAll('/', '\\/')));
+    const moduleSource = fs.readFileSync(path.join(projectRoot, modulePath), 'utf8');
+    assert.match(moduleSource, new RegExp(asset.replaceAll('/', '\\/')));
+  }
+});
+
 test('README 固定 H1–H9 且标记尚未正式收数', () => {
   const readme = fs.readFileSync(path.join(projectRoot, 'README.md'), 'utf8');
   for (let i = 1; i <= 9; i += 1) assert.match(readme, new RegExp(`H${i}`));

@@ -171,6 +171,10 @@
       title: '找到红色三角形',
       html: `
         <p class="lead">每个画面中都有一个红色三角形。找到它，并判断三角形朝左还是朝右。</p>
+        <div class="context-scene">
+          <div><p class="context-kicker">应用情境</p><h3>密集面板中的异常目标</h3><p>监控大屏上常有大量相似标记。把同类项目组织成稳定区域，可以缩小搜索范围，帮助观察者更快找到异常项。</p></div>
+          <img src="./assets/images/visual-search-dashboard.png" alt="按颜色分区的监控界面中正在寻找红色目标">
+        </div>
         <div class="instruction-grid">
           <div class="instruction-card"><h3><kbd>F</kbd> 朝左</h3><p>目标三角形尖端朝左时按 F。</p></div>
           <div class="instruction-card"><h3><kbd>J</kbd> 朝右</h3><p>目标三角形尖端朝右时按 J。</p></div>
