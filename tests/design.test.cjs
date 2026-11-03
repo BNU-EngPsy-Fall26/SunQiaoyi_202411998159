@@ -14,6 +14,7 @@ context.globalThis = context;
 for (const relativePath of [
   'logic.js',
   'model.js',
+  'analysis.js',
   'experiments/flanker.js',
   'experiments/visual-search.js',
   'experiments/graphical-perception.js'
@@ -22,7 +23,7 @@ for (const relativePath of [
   vm.runInContext(source, context, { filename: relativePath });
 }
 
-const { logic, model, experiments } = context.HW2;
+const { logic, model, analysis, experiments } = context.HW2;
 
 function countBy(items, keyFn) {
   const result = new Map();
@@ -258,4 +259,44 @@ test('公开项目码已配置且代码中没有下载密钥字段', () => {
   assert.doesNotMatch(app, /REPLACE_ME|owner_key|download_key/i);
   assert.match(app, /testMode.*searchParams|testMode.*URLSearchParams|testMode/s);
   assert.match(app, /test_\$\{result\.experiment\}/);
+});
+
+test('匿名总体比较排除当前记录并保留每名被试最后一条完整记录', () => {
+  function flankerTrials(plainEffect, isolatedEffect) {
+    const trials = [];
+    for (const layout of ['plain', 'isolated']) {
+      for (const congruency of ['congruent', 'incongruent']) {
+        const base = 500;
+        const effect = layout === 'plain' ? plainEffect : isolatedEffect;
+        const rt = congruency === 'congruent' ? base : base + effect;
+        for (let i = 0; i < 12; i += 1) trials.push({ layout, congruency, rt, correct: 1 });
+      }
+    }
+    return trials;
+  }
+
+  const current = { trials: flankerTrials(80, 20) };
+  const records = [
+    { experiment: 'flanker_grouping', participant: 'P01', record_id: 9, created_at: '2026-11-01 10:00:00', trials: flankerTrials(70, 30) },
+    { experiment: 'flanker_grouping', participant: 'P01', record_id: 10, created_at: '2026-11-02 10:00:00', trials: flankerTrials(90, 30) },
+    { experiment: 'flanker_grouping', participant: 'P02', record_id: 11, created_at: '2026-11-02 10:01:00', trials: flankerTrials(50, 30) },
+    { experiment: 'flanker_grouping', participant: 'P03', record_id: 12, created_at: '2026-11-02 10:02:00', trials: flankerTrials(80, 20) }
+  ];
+  const comparison = analysis.compareWithPeers(current, records, 'flanker_grouping', 12);
+  assert.equal(comparison.currentValue, 60);
+  assert.equal(comparison.n, 2);
+  assert.deepEqual(Array.from(comparison.peers, (item) => item.value), [60, 20]);
+  assert.equal(comparison.median, 40);
+  assert.equal(comparison.percentile, 75);
+});
+
+test('匿名总体比较页面已接入三个实验并说明百分位边界', () => {
+  const index = fs.readFileSync(path.join(projectRoot, 'index.html'), 'utf8');
+  const app = fs.readFileSync(path.join(projectRoot, 'app.js'), 'utf8');
+  const readme = fs.readFileSync(path.join(projectRoot, 'README.md'), 'utf8');
+  assert.match(index, /\.\/analysis\.js/);
+  assert.match(app, /loadPeerComparison/);
+  assert.match(app, /你和其他被试的改进收益/);
+  assert.match(readme, /百分位仅用于说明当前样本中的相对位置/);
+  assert.match(readme, /正式收数后的最终数据处理流程/);
 });

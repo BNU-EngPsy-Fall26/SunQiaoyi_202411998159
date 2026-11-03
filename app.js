@@ -431,6 +431,13 @@
           ${searchResultCard(search)}
           ${graphicalResultCard(graphical)}
         </div>
+        <section class="peer-comparison-section" aria-labelledby="peer-comparison-title">
+          <div class="model-section-heading">
+            <div><p class="eyebrow">匿名总体对比</p><h3 id="peer-comparison-title">你和其他被试的改进收益</h3></div>
+            <p class="small muted">菱形表示你，圆点表示其他完整正式样本。三个指标均为正值越大，越符合事前预测。</p>
+          </div>
+          <div id="peer-comparison" aria-live="polite"><div class="peer-loading">正在读取匿名总体数据…</div></div>
+        </section>
         ${searchModelResultSection(search)}
         <h3>数据状态</h3>
         <div class="status-list">${uploadStatusHtml()}</div>
@@ -447,6 +454,32 @@
     });
     document.getElementById('retry-uploads').addEventListener('click', retryUploads);
     document.getElementById('back-home').addEventListener('click', showLanding);
+    loadPeerComparison();
+  }
+
+  async function loadPeerComparison() {
+    const container = document.getElementById('peer-comparison');
+    if (!container || !root.analysis) return;
+    if (CONFIG.testMode) {
+      container.innerHTML = '<div class="alert alert-warning">当前为测试模式，不读取正式样本进行比较。请通过正式链接完成实验后查看总体对比。</div>';
+      return;
+    }
+    if (!projectConfigured()) {
+      container.innerHTML = '<div class="alert alert-warning">课程项目码尚未配置，暂时无法读取匿名总体数据。</div>';
+      return;
+    }
+    try {
+      const comparisons = await root.analysis.loadComparisons({
+        lab: CONFIG.lab,
+        project: CONFIG.project,
+        results: activeState.results,
+        uploads: activeState.uploads
+      });
+      container.innerHTML = root.analysis.comparisonsHtml(comparisons);
+    } catch (error) {
+      console.warn('匿名总体结果读取失败：', error);
+      container.innerHTML = `<div class="alert alert-warning">匿名总体结果暂时无法读取：${logic.escapeHtml(error.message)}。你的个人结果和已上传数据不受影响，稍后可重新打开结果页查看。</div>`;
+    }
   }
 
   async function retryUploads() {
