@@ -23,6 +23,7 @@
     });
   }
 
+  // 同一组比例材料在三种编码中重复出现，左右大小交替，便于进行被试内配对比较。
   function buildTrials(rng, repetitionsPerCondition = 12, isPractice = false) {
     const pairs = makePairs(rng, repetitionsPerCondition);
     const trials = [];
@@ -111,6 +112,7 @@
       const form = document.getElementById('estimate-form');
       const input = document.getElementById('estimate-input');
       const error = document.getElementById('estimate-error');
+      // runTrial 已等待两帧绘制；此处从输入框可交互时开始计时，并记录期间是否失焦。
       const startedAt = performance.now();
       let focusLost = false;
 
@@ -158,6 +160,7 @@
           <div id="estimate-error" class="small danger-text" style="min-height:24px;margin-top:8px"></div>
         </div>`
     });
+    // 保证图形和输入控件都完成绘制后再开放作答。
     await logic.nextPaint();
     const response = await waitForEstimate();
     const absError = Math.abs(response.estimate - trial.true_ratio);

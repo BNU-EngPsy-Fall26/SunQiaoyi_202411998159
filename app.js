@@ -246,6 +246,7 @@
       };
     }
 
+    // 每个实验单独提交一次；15 秒超时后保留本地结果，允许被试稍后重试。
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
     try {
@@ -255,6 +256,7 @@
         signal: controller.signal,
         body: JSON.stringify({
           project: CONFIG.project,
+          // 测试链接自动加前缀，防止调试记录混入正式分析。
           experiment: CONFIG.testMode ? `test_${result.experiment}` : result.experiment,
           participant: activeState.participant,
           condition: activeState.order.join('-'),
@@ -315,6 +317,7 @@
   }
 
   async function runSession() {
+    // 每完成一个实验立即保存并上传，刷新页面后可从下一个未完成实验继续。
     for (const experimentId of activeState.order) {
       const alreadyDone = completedIds(activeState).includes(experimentId);
       if (alreadyDone) continue;
@@ -469,6 +472,7 @@
       return;
     }
     try {
+      // 接口只返回匿名总体数据；本次上传的 record_id 用于从同伴分布中排除当前记录。
       const comparisons = await root.analysis.loadComparisons({
         lab: CONFIG.lab,
         project: CONFIG.project,

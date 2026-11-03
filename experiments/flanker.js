@@ -18,6 +18,7 @@
     };
   }
 
+  // 先生成 2（排列）× 2（一致性）的完全平衡设计，再限制连续相同按键不超过 3 次。
   function buildTrials(rng, repetitionsPerCell = 12, isPractice = false) {
     const trials = [];
     for (const layout of ['plain', 'isolated']) {
@@ -65,6 +66,7 @@
       total,
       content: arrowsHtml(trial)
     });
+    // 等待刺激完成绘制后才开始计时，避免把浏览器渲染时间计入反应时。
     await logic.nextPaint();
     const response = await logic.timedKeyResponse(['KeyF', 'KeyJ'], 1500);
     const correct = response.key === trial.correct_key ? 1 : 0;

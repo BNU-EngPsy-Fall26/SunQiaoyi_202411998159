@@ -98,6 +98,7 @@
   }
 
   function nextPaint() {
+    // 两次 requestAnimationFrame 确保 DOM 更新至少经过一次完整绘制周期。
     return new Promise((resolve) => {
       requestAnimationFrame(() => requestAnimationFrame(resolve));
     });
@@ -124,6 +125,7 @@
       }
 
       function onKey(event) {
+        // 忽略长按触发的重复事件和任务无关按键，避免一次按键生成多条反应。
         if (event.repeat || !validCodes.includes(event.code)) return;
         event.preventDefault();
         finish({ key: event.code, rt: performance.now() - startedAt, timeout: false });
@@ -143,6 +145,7 @@
   }
 
   function experimentOrder(participant) {
+    // 匿名编号稳定映射到六种实验顺序，同一人刷新后仍保持原顺序。
     const orders = [
       ['flanker', 'visual_search', 'graphical'],
       ['flanker', 'graphical', 'visual_search'],
@@ -155,6 +158,7 @@
   }
 
   function summarizeFlanker(trials) {
+    // 反应时只使用正确且不低于 150 ms 的试次；正确率仍使用全部正式试次。
     const cells = {};
     for (const layout of ['plain', 'isolated']) {
       cells[layout] = {};
@@ -183,6 +187,7 @@
   }
 
   function summarizeSearch(trials) {
+    // 搜索斜率由集合大小 8 与 24 的条件中位反应时差计算。
     const types = ['feature', 'conjunction_mixed', 'conjunction_grouped'];
     const cells = {};
     const slopes = {};
@@ -209,6 +214,7 @@
   }
 
   function summarizeGraphical(trials) {
+    // 绝对误差是主要指标，判断时间按预注册规则排除低于 300 ms 的试次。
     const encodings = ['bar_common', 'angle_plain', 'angle_guided'];
     const cells = {};
     for (const encoding of encodings) {

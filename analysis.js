@@ -50,6 +50,7 @@
   function latestCompleteRecords(records, experiment) {
     const config = EXPERIMENTS[experiment];
     if (!config) return [];
+    // 每人每个实验只纳入最后一条完整记录，旧记录仍留在原始数据中供审计。
     const latest = new Map();
     for (const record of records || []) {
       if (record.experiment !== experiment || !record.participant || !Array.isArray(record.trials)) continue;
@@ -64,6 +65,7 @@
     const config = EXPERIMENTS[experiment];
     if (!config || !record || !Array.isArray(record.trials)) return null;
     if (record.trials.length < config.expectedTrials) return null;
+    // Flanker 和视觉搜索沿用预注册的 60% 正确率门槛；图形判断没有正确率指标。
     if (config.accuracyRequired && overallAccuracy(record.trials) < 0.60) return null;
     const summary = config.summarize(record.trials);
     const value = config.value(summary);
@@ -77,6 +79,7 @@
     const currentValue = config.value(currentSummary);
     if (!Number.isFinite(currentValue)) return { experiment, config, ready: false, reason: '当前有效试次不足' };
 
+    // record_id 能精确排除刚上传的当前记录，不需要反推后台匿名编号。
     const peers = latestCompleteRecords(records, experiment)
       .filter((record) => String(record.record_id || '') !== String(excludeRecordId || ''))
       .map((record) => {
@@ -85,6 +88,7 @@
       })
       .filter(Boolean);
     const values = peers.map((item) => item.value);
+    // 使用中秩百分位处理并列值；三个收益指标均已统一为数值越大越符合预测。
     const lower = values.filter((value) => value < currentValue).length;
     const equal = values.filter((value) => value === currentValue).length;
 
@@ -106,6 +110,7 @@
 
   async function loadComparisons({ lab, project, results, uploads, fetchImpl = global.fetch }) {
     const names = Object.keys(EXPERIMENTS).filter((name) => results && results[name]);
+    // 三个接口并行读取，避免完成页按实验串行等待。
     return Promise.all(names.map(async (experiment) => {
       const records = await fetchExperimentRecords(lab, project, experiment, fetchImpl);
       const recordId = uploads && uploads[experiment] ? uploads[experiment].record_id : '';

@@ -13,6 +13,7 @@
     }[type];
   }
 
+  // 三种搜索方式各包含集合大小 8 和 24；左右目标与分区位置在生成阶段保持平衡。
   function buildTrials(rng, repetitionsPerCell = 10, isPractice = false) {
     const trials = [];
     let sequence = 0;
@@ -83,6 +84,7 @@
     }
 
     const board = Array(24).fill(null);
+    // 改进条件只改变空间组织：红蓝项目分别进入左右半区，项目数量和形状组成保持不变。
     if (trial.search_type === 'conjunction_grouped') {
       const redCells = trial.group_side === 'left' ? leftCells : rightCells;
       const blueCells = trial.group_side === 'left' ? rightCells : leftCells;
@@ -132,6 +134,7 @@
       total,
       content: boardHtml(trial, generated)
     });
+    // 阵列进入屏幕后再启动 performance.now() 计时。
     await logic.nextPaint();
     const response = await logic.timedKeyResponse(['KeyF', 'KeyJ'], 5000);
     const correct = response.key === trial.correct_key ? 1 : 0;
