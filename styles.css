@@ -251,6 +251,41 @@ button { touch-action: manipulation; }
 .control-strip span { display: inline-flex; align-items: center; gap: 8px; }
 .control-strip i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px rgba(77, 128, 121, .6); }
 
+.mission-briefing {
+  position: relative;
+  margin: 24px 0 10px;
+  padding: 18px 20px 18px 24px;
+  overflow: hidden;
+  border: 1px solid rgba(95, 137, 177, .42);
+  border-left: 4px solid var(--green);
+  border-radius: 15px;
+  background: linear-gradient(135deg, rgba(215, 225, 235, .58), rgba(197, 233, 227, .30));
+}
+.mission-briefing::after {
+  position: absolute;
+  top: -42px;
+  right: -30px;
+  width: 130px;
+  height: 130px;
+  border: 1px solid rgba(55, 107, 158, .15);
+  border-radius: 50%;
+  content: "";
+  box-shadow: 0 0 0 22px rgba(55, 107, 158, .04), 0 0 0 44px rgba(55, 107, 158, .025);
+}
+.mission-briefing-title {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  color: var(--navy);
+  font-weight: 800;
+}
+.mission-briefing-title small { color: var(--blue); font-size: 10px; letter-spacing: .12em; }
+.mission-briefing p { position: relative; z-index: 1; margin: 0; color: #435f7c; font-size: 14px; line-height: 1.85; }
+
 .panel-narrow { width: min(760px, 100%); margin: 0 auto; }
 
 .eyebrow {

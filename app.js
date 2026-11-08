@@ -170,6 +170,10 @@
             <p class="eyebrow">视觉控制舱 · 操作员任务</p>
             <h1>视觉组织与<br>注意效率实验室</h1>
             <p class="lead">你将完成三个短实验，观察目标边界、颜色分区和图形参照线怎样影响反应速度与判断准确性。</p>
+            <div class="mission-briefing">
+              <div class="mission-briefing-title"><span>任务简报</span><small>MISSION BRIEFING</small></div>
+              <p>欢迎进入视觉控制舱。你将作为本次值班操作员，依次校准三套视觉系统：从方向干扰中锁定中央警报，在密集信号中搜索指定目标，并读取不同形式的仪表数据。请保持专注，按照每个模块的提示准确作答。控制舱会记录你的反应时间和判断结果，用于评估信息组织方式是否能帮助操作员更高效地完成任务。</p>
+            </div>
             <div class="study-list">
               <article class="study-card">
                 <div class="study-visual"><img src="./assets/images/flanker-monitoring.png" alt="监控台上被单独框选的中央警报目标"></div>
