@@ -155,7 +155,7 @@ test('三个核心改进效应的计算方向正确', () => {
   assert.equal(graphical.guide_benefit, 5);
 });
 
-test('搜索范围模型固定预测并正确汇总实测斜率', () => {
+test('搜索范围模型参照并正确汇总实测斜率', () => {
   const trials = [];
   const searchValues = {
     feature: [500, 516],
@@ -229,7 +229,7 @@ test('模型页面可离线打开且实验首页提供入口', () => {
     assert.ok(ref.startsWith('./'), `模型页应使用相对路径：${ref}`);
     assert.ok(fs.existsSync(path.join(projectRoot, ref)), `模型页文件不存在：${ref}`);
   }
-  assert.match(html, /事前预测与实测/);
+  assert.match(html, /理论参照与实测/);
 });
 
 test('三个实验情境图均存在并接入对应模块', () => {
@@ -283,6 +283,28 @@ test('正式结果页可离线打开并完整报告 H1–H9', () => {
   assert.match(data, /颜色分区改进有效/);
   assert.match(data, /目标框没有减小 Flanker 干扰/);
   assert.match(data, /参照线改进无效/);
+});
+
+test('正式分析脚本可复现网页公开的核心统计量', () => {
+  const summaryPath = path.join(projectRoot, 'analysis', 'final-summary.json');
+  const scriptPath = path.join(projectRoot, 'analysis', 'final-analysis.cjs');
+  assert.ok(fs.existsSync(scriptPath));
+  assert.ok(fs.existsSync(summaryPath));
+  const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+  const publishedContext = vm.createContext({ console });
+  publishedContext.window = publishedContext;
+  vm.runInContext(fs.readFileSync(path.join(projectRoot, 'results-data.js'), 'utf8'), publishedContext);
+  const published = publishedContext.HW2_FORMAL_RESULTS;
+  const closeTo = (actual, expected, tolerance = 1e-9) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}`);
+
+  assert.equal(summary.data_quality.total_formal_trials, published.totalTrials);
+  assert.equal(summary.data_quality.complete_records.flanker_grouping, published.n);
+  closeTo(summary.primary_results.flanker.plain_interference_ms, published.experiments.flanker.means.plain);
+  closeTo(summary.primary_results.flanker.isolation_benefit.mean, published.experiments.flanker.improvement.value, 0.01);
+  closeTo(summary.primary_results.visual_search.grouped_slope_ms_per_item, published.experiments.search.means.grouped, 0.01);
+  closeTo(summary.primary_results.visual_search.grouping_benefit.mean, published.experiments.search.improvement.value, 0.01);
+  closeTo(summary.primary_results.graphical_perception.angle_guided_error_points, published.experiments.graphical.means.guided, 0.01);
+  closeTo(summary.primary_results.graphical_perception.guide_benefit.mean, published.experiments.graphical.improvement.value, 0.01);
 });
 
 test('图形结果按事前规则排除低于 300 ms 的试次', () => {

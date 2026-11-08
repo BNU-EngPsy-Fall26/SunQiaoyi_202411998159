@@ -29,7 +29,7 @@
     <section class="panel">
       <p class="eyebrow">额外模型可视化</p>
       <h1>视觉搜索范围模型</h1>
-      <p class="lead">模型预测颜色分区会把有效搜索范围缩小约一半。选择课程后台下载的 CSV 后，页面会在本地计算正式被试结果，并与事前预测直接比较。</p>
+      <p class="lead">补充模型假设颜色分区会把有效搜索范围缩小约一半。选择课程后台下载的 CSV 后，页面会在本地计算正式被试结果，并与理论参照直接比较。</p>
 
       <div class="model-formula-grid">
         <div><span>特征搜索</span><code>ΔRT = 0</code><small>预测近似平行搜索</small></div>
@@ -40,11 +40,11 @@
       <div class="model-analysis-grid">
         <div>
           <div class="model-chart-heading">
-            <div><h2>事前预测与实测</h2><p class="small muted">混合条件用于标定，虚线为固定预测。</p></div>
+            <div><h2>理论参照与实测</h2><p class="small muted">混合条件用于标定，虚线为补充模型的固定参照。</p></div>
             <label class="btn btn-secondary model-file-label" for="model-csv">选择 CSV</label>
             <input class="model-file-input" id="model-csv" type="file" accept=".csv,text/csv">
           </div>
-          <div id="model-status" class="alert alert-info">当前显示事前预测。正式 CSV 仅在本机浏览器中读取，不会上传。</div>
+          <div id="model-status" class="alert alert-info">当前显示补充模型参照。正式 CSV 仅在本机浏览器中读取，不会上传。</div>
           <div id="model-metrics" class="model-metrics" aria-live="polite"></div>
           <div id="model-chart" class="model-chart-wrap"></div>
           <div id="model-legend"></div>
@@ -59,7 +59,7 @@
             <li>先计算每名被试各条件的中位反应时。</li>
             <li>用混合条件的搜索成本标准化全部结果。</li>
           </ol>
-          <div class="model-note"><strong>判定标准</strong><p>条件顺序应为“特征 &lt; 分组联合 &lt; 混合联合”，分组/混合斜率比的事前预测值为 0.50。</p></div>
+          <div class="model-note"><strong>判定标准</strong><p>条件顺序参照为“特征 &lt; 分组联合 &lt; 混合联合”，补充模型中的分组/混合斜率比为 0.50。</p></div>
         </aside>
       </div>
 

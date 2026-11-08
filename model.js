@@ -240,7 +240,7 @@
 
   function legendHtml(hasActual) {
     const conditions = TYPES.map((type) => `<span class="model-legend-item"><i style="color:${TYPE_META[type].color}"></i>${TYPE_META[type].label}</span>`).join('');
-    return `<div class="model-legend" aria-label="图例">${conditions}<span class="model-line-key dashed">事前预测</span>${hasActual ? '<span class="model-line-key solid">实测结果</span>' : ''}</div>`;
+    return `<div class="model-legend" aria-label="图例">${conditions}<span class="model-line-key dashed">理论参照</span>${hasActual ? '<span class="model-line-key solid">实测结果</span>' : ''}</div>`;
   }
 
   function resultPanelHtml(comparison) {
