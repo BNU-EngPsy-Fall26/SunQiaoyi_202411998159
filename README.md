@@ -2,6 +2,8 @@
 
 > 工程心理学第二次作业：三个经典实验的网页复现与显示设计改进
 
+> **正式实验结果：** [点击查看 12 名被试的完整图表、H1–H9 检验和原文对照](https://bnu-engpsy-fall26.github.io/SunQiaoyi_202411998159/results.html)
+
 ## 项目状态
 
 - 事前研究计划版本：v0.2
@@ -10,6 +12,7 @@
 - 程序状态：实验、数据上传、个人反馈、匿名总体比较和正式结果页均已完成
 - 课程收数项目码：`CUPX8L`
 - 公开演示地址：[https://bnu-engpsy-fall26.github.io/SunQiaoyi_202411998159/](https://bnu-engpsy-fall26.github.io/SunQiaoyi_202411998159/)
+- 正式结果地址：[https://bnu-engpsy-fall26.github.io/SunQiaoyi_202411998159/results.html](https://bnu-engpsy-fall26.github.io/SunQiaoyi_202411998159/results.html)
 - 事前计划首次提交：`4c925936d4f1259e5a7ecc58c97e3d6107adaa28`
 
 本 README 当前用于固定研究问题、实验条件、方向性预测和分析方法。正式收数开始后，不根据观察到的数据修改下列假设。预测试阶段只允许修复程序错误、指导语歧义和明显的显示兼容问题，所有调整均需留下 Git 记录。
@@ -414,7 +417,7 @@ Flanker 与视觉搜索没有低于 150 ms 的正确试次，也没有被试因�
 
 ### 10.4 正式结果与原文对照
 
-完整图表、12 名匿名被试的数据点和 H1–H9 判断见[正式结果页](./results.html)。
+完整图表、12 名匿名被试的数据点和 H1–H9 判断见[正式结果页](https://bnu-engpsy-fall26.github.io/SunQiaoyi_202411998159/results.html)。该页面可直接在线打开，也可在 clone 仓库后双击 `results.html` 离线查看。
 
 #### Flanker 与目标隔离
 
