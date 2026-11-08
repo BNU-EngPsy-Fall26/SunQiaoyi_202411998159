@@ -9,7 +9,14 @@
   <script defer src="./logic.js"></script>
   <script defer src="./model.js"></script>
 </head>
-<body>
+<body data-scene="analysis">
+  <div class="control-room-ambient" aria-hidden="true">
+    <div class="room-grid"></div>
+    <div class="radar-orbit"><span></span><span></span><span></span></div>
+    <div class="console-rail rail-left"></div>
+    <div class="console-rail rail-right"></div>
+    <div class="ambient-lights"><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
   <header class="site-header">
     <a class="brand" href="./index.html" aria-label="返回实验首页">
       <span class="brand-mark" aria-hidden="true">VO</span>

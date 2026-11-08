@@ -36,6 +36,10 @@
     headerStatus.textContent = text;
   }
 
+  function setSceneMode(mode) {
+    document.body.dataset.scene = mode;
+  }
+
   function render(html) {
     app.innerHTML = html;
     app.focus({ preventScroll: true });
@@ -49,6 +53,7 @@
   }
 
   function showInstructions({ eyebrow, title, html, buttonText = '继续' }) {
+    setSceneMode('briefing');
     render(`
       <section class="panel panel-narrow">
         <p class="eyebrow">${logic.escapeHtml(eyebrow)}</p>
@@ -60,6 +65,7 @@
   }
 
   function renderStage({ title, phase, current, total, content }) {
+    setSceneMode('task');
     const percentage = total ? Math.min(100, Math.max(0, current / total * 100)) : 0;
     render(`
       <section class="experiment-shell">
@@ -143,6 +149,7 @@
   }
 
   function showLanding() {
+    setSceneMode('landing');
     setHeaderStatus('准备开始');
     const previous = loadState();
     const previousHtml = previous ? `
@@ -157,9 +164,10 @@
 
     render(`
       <section class="panel">
+        <div class="control-strip"><span><i></i> CONTROL DECK 03</span><span>视觉系统在线 · 三个模块待命</span></div>
         <div class="hero-grid">
           <div>
-            <p class="eyebrow">工程心理学 · 注意实验室</p>
+            <p class="eyebrow">视觉控制舱 · 操作员任务</p>
             <h1>视觉组织与<br>注意效率实验室</h1>
             <p class="lead">你将完成三个短实验，观察目标边界、颜色分区和图形参照线怎样影响反应速度与判断准确性。</p>
             <div class="study-list">
@@ -293,6 +301,7 @@
   }
 
   async function showIntermission(result, upload, completedCount) {
+    setSceneMode('briefing');
     const nextId = activeState.order.find((id) => !completedIds(activeState).includes(id));
     const warningHtml = upload.warnings && upload.warnings.length
       ? `<div class="alert alert-warning"><strong>后台警告</strong><br>${upload.warnings.map(logic.escapeHtml).join('<br>')}</div>` : '';
@@ -421,6 +430,7 @@
   }
 
   function showResults() {
+    setSceneMode('report');
     setHeaderStatus('实验完成');
     const flanker = activeState.results.flanker_grouping;
     const search = activeState.results.visual_search_grouping;
@@ -488,6 +498,7 @@
   }
 
   async function retryUploads() {
+    setSceneMode('report');
     setHeaderStatus('正在上传');
     render(`
       <section class="panel panel-narrow center">
@@ -503,6 +514,7 @@
   }
 
   function showFatalError(error) {
+    setSceneMode('briefing');
     console.error(error);
     setHeaderStatus('发生错误');
     render(`

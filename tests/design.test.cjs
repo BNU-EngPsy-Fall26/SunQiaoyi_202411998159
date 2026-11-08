@@ -206,6 +206,20 @@ test('入口页面只使用相对本地资源路径', () => {
   assert.doesNotMatch(html, /type="module"/);
 });
 
+test('控制舱场景覆盖首页、正式任务和结果页', () => {
+  const index = fs.readFileSync(path.join(projectRoot, 'index.html'), 'utf8');
+  const results = fs.readFileSync(path.join(projectRoot, 'results.html'), 'utf8');
+  const modelPage = fs.readFileSync(path.join(projectRoot, 'model.html'), 'utf8');
+  const app = fs.readFileSync(path.join(projectRoot, 'app.js'), 'utf8');
+  const styles = fs.readFileSync(path.join(projectRoot, 'styles.css'), 'utf8');
+  for (const html of [index, results, modelPage]) assert.match(html, /control-room-ambient/);
+  assert.match(app, /setSceneMode\('task'\)/);
+  assert.match(app, /setSceneMode\('landing'\)/);
+  assert.match(app, /setSceneMode\('report'\)/);
+  assert.match(styles, /body\[data-scene="task"\]/);
+  assert.match(styles, /prefers-reduced-motion/);
+});
+
 test('模型页面可离线打开且实验首页提供入口', () => {
   const index = fs.readFileSync(path.join(projectRoot, 'index.html'), 'utf8');
   const html = fs.readFileSync(path.join(projectRoot, 'model.html'), 'utf8');
