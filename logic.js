@@ -219,11 +219,13 @@
     const cells = {};
     for (const encoding of encodings) {
       const selected = trials.filter((trial) => trial.encoding === encoding);
+      const valid = selected.filter((trial) => trial.rt >= 300);
       cells[encoding] = {
         n: selected.length,
-        mean_abs_error: mean(selected.map((trial) => trial.abs_error)),
-        median_abs_error: median(selected.map((trial) => trial.abs_error)),
-        median_rt: median(selected.filter((trial) => trial.rt >= 300).map((trial) => trial.rt))
+        valid_n: valid.length,
+        mean_abs_error: mean(valid.map((trial) => trial.abs_error)),
+        median_abs_error: median(valid.map((trial) => trial.abs_error)),
+        median_rt: median(valid.map((trial) => trial.rt))
       };
     }
     return {

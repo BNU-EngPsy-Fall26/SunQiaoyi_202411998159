@@ -188,6 +188,7 @@
               </ul>
             </div>
             ${projectNotice()}
+            <div class="actions"><a class="btn btn-secondary" href="./results.html">查看全部正式结果</a></div>
             ${window.innerWidth < 900 ? '<div class="alert alert-warning">当前窗口较窄。建议使用电脑并最大化浏览器，以免刺激显示过小。</div>' : ''}
             <form id="start-form" class="form-stack" novalidate>
               <div class="field">

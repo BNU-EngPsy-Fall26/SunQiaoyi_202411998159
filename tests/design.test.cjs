@@ -244,13 +244,44 @@ test('样式表引用的颜色变量均已定义', () => {
   }
 });
 
-test('README 固定 H1–H9 且标记尚未正式收数', () => {
+test('README 保留 H1–H9 事前记录并报告正式结果', () => {
   const readme = fs.readFileSync(path.join(projectRoot, 'README.md'), 'utf8');
   for (let i = 1; i <= 9; i += 1) assert.match(readme, new RegExp(`H${i}`));
-  assert.match(readme, /正式收数状态：\*\*尚未开始\*\*/);
+  assert.match(readme, /正式收数状态：\*\*已结束，12 名有效被试完成三个实验\*\*/);
   assert.match(readme, /4c925936d4f1259e5a7ecc58c97e3d6107adaa28/);
   assert.match(readme, /fb36016cd6dc4667169dd3dcb8d78288e623e694/);
   assert.match(readme, /model\.html/);
+  assert.match(readme, /results\.html/);
+});
+
+test('正式结果页可离线打开并完整报告 H1–H9', () => {
+  const index = fs.readFileSync(path.join(projectRoot, 'index.html'), 'utf8');
+  const html = fs.readFileSync(path.join(projectRoot, 'results.html'), 'utf8');
+  const data = fs.readFileSync(path.join(projectRoot, 'results-data.js'), 'utf8');
+  assert.match(index, /\.\/results\.html/);
+  for (const ref of [...html.matchAll(/(?:src|href)="([^"]+)"/g)].map((match) => match[1])) {
+    assert.ok(ref.startsWith('./'), `结果页应使用相对路径：${ref}`);
+    assert.ok(fs.existsSync(path.join(projectRoot, ref)), `结果页文件不存在：${ref}`);
+  }
+  assert.match(data, /n:\s*12/);
+  assert.match(data, /totalTrials:\s*1728/);
+  for (let i = 1; i <= 9; i += 1) assert.match(data, new RegExp(`id: 'H${i}'`));
+  assert.match(data, /颜色分区改进有效/);
+  assert.match(data, /目标框没有减小 Flanker 干扰/);
+  assert.match(data, /参照线改进无效/);
+});
+
+test('图形结果按事前规则排除低于 300 ms 的试次', () => {
+  const summary = logic.summarizeGraphical([
+    { encoding: 'bar_common', abs_error: 100, rt: 100 },
+    { encoding: 'bar_common', abs_error: 4, rt: 900 },
+    { encoding: 'angle_plain', abs_error: 12, rt: 1000 },
+    { encoding: 'angle_guided', abs_error: 7, rt: 1100 }
+  ]);
+  assert.equal(summary.cells.bar_common.n, 2);
+  assert.equal(summary.cells.bar_common.valid_n, 1);
+  assert.equal(summary.cells.bar_common.mean_abs_error, 4);
+  assert.equal(summary.guide_benefit, 5);
 });
 
 test('公开项目码已配置且代码中没有下载密钥字段', () => {
